@@ -1,0 +1,36 @@
+[
+  {
+    "id": "card_walk_4km",
+    "title": "Walk 4km",
+    "description": "Walk at a relaxed but steady pace for a total of 4km.",
+    "domain": "physical",
+    "estimated_time": 40,
+    "xp_reward": 20,
+    "linked_skill_nodes": ["skill_physical_base"],
+    "difficulty": "easy",
+    "tags": ["physical", "fitness"]
+  },
+  {
+    "id": "card_read_constitution_5pages",
+    "title": "Read 5 Pages of GG",
+    "description": "Read 5 pages of the German Basic Law (Grundgesetz) and highlight key principles.",
+    "domain": "academic",
+    "estimated_time": 20,
+    "xp_reward": 25,
+    "linked_skill_nodes": ["skill_foundation_language"],
+    "difficulty": "easy",
+    "tags": ["academic", "law", "germany"]
+  },
+  {
+    "id": "card_osint_basic_search",
+    "title": "OSINT: Basic Company Scan",
+    "description": "Pick a random company and find: website, HQ location, CEO, and 1 risk indicator. Take notes.",
+    "domain": "ci_skills",
+    "estimated_time": 30,
+    "xp_reward": 30,
+    "linked_skill_nodes": ["skill_osint_fundamentals"],
+    "difficulty": "medium",
+    "tags": ["osint", "ci_skills", "research"]
+  }
+]
+
