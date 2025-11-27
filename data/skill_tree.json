@@ -1,0 +1,32 @@
+[
+  {
+    "id": "skill_foundation_language",
+    "tier": 0,
+    "name": "Language Foundation",
+    "description": "C1-level German + strong written English for reports and exams.",
+    "category": "foundation",
+    "prerequisites": [],
+    "xp_required": 500,
+    "domains": ["academic"]
+  },
+  {
+    "id": "skill_physical_base",
+    "tier": 0,
+    "name": "Physical Base Conditioning",
+    "description": "Baseline bodyweight strength and pain-free 3km run.",
+    "category": "physical",
+    "prerequisites": [],
+    "xp_required": 400,
+    "domains": ["physical"]
+  },
+  {
+    "id": "skill_osint_fundamentals",
+    "tier": 1,
+    "name": "OSINT Fundamentals",
+    "description": "Basic OSINT search, metadata, and structured note-taking.",
+    "category": "osint",
+    "prerequisites": ["skill_foundation_language"],
+    "xp_required": 600,
+    "domains": ["ci_skills"]
+  }
+]

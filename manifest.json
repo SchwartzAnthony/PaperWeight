@@ -1,0 +1,22 @@
+{
+  "name": "Prime Officer App",
+  "short_name": "Officer",
+  "description": "CI Officer progression, missions, streaks, and character sheet.",
+  "start_url": "https://schwartzanthony.github.io/PaperWeight.html#dashboard",
+  "scope": "https://schwartzanthony.github.io/PaperWeight/",
+  "display": "standalone",
+  "background_color": "#05060a",
+  "theme_color": "#05060a",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

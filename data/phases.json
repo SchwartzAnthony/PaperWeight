@@ -1,0 +1,24 @@
+[
+  {
+    "id": "phase_2025_foundation",
+    "name": "Phase 0 – Foundation & Exploration",
+    "start_date": "2025-12-01",
+    "end_date": "2026-11-30",
+    "goals": [
+      "Stabilize daily routines",
+      "Begin physical base training",
+      "Start reading on Bundeswehr, MAD, and FAU"
+    ]
+  },
+  {
+    "id": "phase_2026_citizenship_prep",
+    "name": "Phase 1 – Citizenship & Academic Ramp-Up",
+    "start_date": "2026-12-01",
+    "end_date": "2027-11-30",
+    "goals": [
+      "Submit German citizenship application",
+      "Reach B2–C1 German level formally",
+      "Prepare Offizierschule aptitude basics"
+    ]
+  }
+]
