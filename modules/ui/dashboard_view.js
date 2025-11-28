@@ -3,7 +3,6 @@
 // Works with: state.js, router.js, card_selector.js, timeline_engine.js.
 
 import { getState, getUser, setUser, getSkillTree} from "../core/state.js";
-import { navigateTo } from "../core/router.js";
 import {
   computeTimelineView,
   getCurrentPhase,
@@ -17,6 +16,7 @@ import {
 import { saveUser } from "../core/storage.js";
 import { computeSkillOverview } from "../logic/skill_overview_engine.js";
 import { computeOfficerStats } from "../logic/officer_engine.js";
+import { navigateTo } from "../core/router.js";
 
 
 
@@ -142,9 +142,6 @@ export function renderDashboard() {
 
         </div>
       </section>
-
-
-
 
 
             <!-- ---- TODAY'S WORKOUT (NON-NEGOTIABLE) ---- -->
@@ -299,6 +296,17 @@ export function renderDashboard() {
         </ul>
       </section>
 
+      <!-- ---- READING ROOM SHORTCUT ---- -->
+<section class="dash-section">
+  <h2>Reading Room</h2>
+  <p class="dash-subtitle">
+    Open your reading library and follow along while the soundtrack keeps playing.
+  </p>
+  <button class="btn-primary" id="open-reader-btn">
+    📖 Open Reading Room
+  </button>
+</section>
+
             <!-- ---- NAVIGATION ---- -->
       <section class="dash-section">
         <h2>Navigation</h2>
@@ -311,6 +319,14 @@ export function renderDashboard() {
 
     </div>
   `;
+  // --- Reading Room button wiring ---
+  const openReaderBtn = document.getElementById("open-reader-btn");
+  if (openReaderBtn) {
+    openReaderBtn.addEventListener("click", () => {
+      navigateTo("reader");     // ✅ string, no SCREENS
+    });
+  }
+
 
 function computeXpHistory(user, cards, mode) {
   const log = user.completed_cards_by_date || {};

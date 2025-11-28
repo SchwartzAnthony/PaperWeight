@@ -206,6 +206,160 @@ body {
   width: 100%;
 }
 
+/* ==============
+   Soundtrack Section
+   ============== */
+
+.soundtrack-section {
+  margin-top: 16px;
+}
+
+.soundtrack-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.soundtrack-icon {
+  font-size: 2rem;
+}
+
+.soundtrack-subtitle {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.soundtrack-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.soundtrack-chip {
+  border-radius: 999px;
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.soundtrack-chip.is-active {
+  background: var(--btn-primary-bg);
+  border-color: transparent;
+}
+
+.soundtrack-now-playing {
+  margin-bottom: 8px;
+}
+
+.now-playing-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.now-playing-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.soundtrack-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.soundtrack-controls button {
+  flex: 0 0 auto;
+}
+
+/* =========================
+   Global Soundtrack Bar
+   ========================= */
+
+#global-soundtrack-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(5, 6, 10, 0.96);
+  border-top: 1px solid var(--border-card);
+  backdrop-filter: blur(10px);
+}
+
+#global-soundtrack-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gs-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gs-btn {
+  min-width: 36px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-card);
+  background: var(--btn-primary-bg);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.gs-track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.gs-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+#global-soundtrack-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gs-modes {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.gs-mode-chip {
+  border-radius: 999px;
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.75rem;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+
+.gs-mode-chip.is-active {
+  background: var(--btn-primary-bg);
+  border-color: transparent;
+}
+
+
+
+
 /* ============================
    Pinnacle Goals Section
    ============================ */
@@ -489,6 +643,165 @@ textarea {
   background: var(--bg-subcard);
   color: var(--text-main);
 }
+
+/* =========================
+   Reading Room
+   ========================= */
+
+.reader-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.reader-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.reader-header-main h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.reader-header-main p {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Layout: content + list
+   Desktop: side-by-side
+   Phone: content on top, list below
+*/
+.reader-layout {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+/* Desktop / tablet: side-by-side */
+@media (min-width: 769px) {
+  .reader-layout {
+    flex-direction: row;
+  }
+
+  .reader-main {
+    flex: 1 1 auto;
+  }
+
+  .reader-sidebar {
+    flex: 0 0 260px;
+  }
+}
+
+.reader-main {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-card);
+}
+
+/* Big viewing area */
+.reader-content {
+  min-height: 70vh;
+  max-height: none;
+  overflow-y: auto;
+}
+
+.reader-placeholder,
+.reader-loading,
+.reader-error {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Text reading */
+.reader-text-content pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* PDF reading – larger window */
+.reader-pdf-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.reader-pdf-frame {
+  width: 100%;
+  height: 80vh; /* much larger for phone + desktop */
+  border: none;
+}
+
+.reader-note {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* List of docs */
+.reader-sidebar {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-card);
+}
+
+.reader-sidebar h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.reader-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reader-list-item {
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-main);
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.reader-list-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.reader-list-item.is-active,
+.reader-list-item:focus-visible {
+  border-color: var(--btn-primary-bg);
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.reader-list-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.reader-list-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.reader-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 
 
 /* ==============
@@ -1286,5 +1599,6 @@ textarea {
   #app {
     max-width: 520px;
     padding: 20px 20px 40px;
+    padding-bottom: 80px; /* enough space for the bar height */
   }
 }

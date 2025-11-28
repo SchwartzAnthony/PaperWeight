@@ -1,0 +1,23 @@
+[
+  {
+    "id": "stoic_morning",
+    "title": "Morning Stoic Primer",
+    "description": "Short text for warm-up walking / cycling.",
+    "type": "text",
+    "file": "./assets/readings/stoic_morning.txt"
+  },
+  {
+    "id": "thesis_ch1",
+    "title": "Thesis – Chapter 1 Draft",
+    "description": "Language retention: intro and background.",
+    "type": "text",
+    "file": "./assets/readings/thesis_ch1.txt"
+  },
+  {
+    "id": "boxing_drills",
+    "title": "Boxing Drills PDF",
+    "description": "PDF reference with drills and combos.",
+    "type": "pdf",
+    "file": "./assets/readings/boxing_drills.pdf"
+  }
+]

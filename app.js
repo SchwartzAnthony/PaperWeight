@@ -27,6 +27,8 @@ import { renderReflectionView } from "./modules/ui/reflection_view.js";
 import { initTheme } from "./modules/ui/theme.js";
 import { renderOfficerView } from "./modules/ui/officer_view.js";
 import { renderWorkoutsView } from "./modules/ui/workouts_view.js";
+import { initSoundtrack } from "./modules/ui/soundtrack.js";
+import { renderReaderView } from "./modules/ui/reader_view.js";
 
 
 
@@ -57,6 +59,9 @@ async function bootstrap() {
       reflections: staticData.reflections,
     });
 
+     // 2b) Initialize global soundtrack bar (persists across screens)
+    initSoundtrack(user);
+
     // 3) Generate today's missions once at startup
     const userNow = getUser();
     const cardsNow = getCards();
@@ -65,10 +70,9 @@ async function bootstrap() {
 
     console.log("[BOOTSTRAP] State initialized:", getState());
 
-    // 4) Set up router → render based on screen
+// 4) Set up router → render based on screen
 onScreenChange((screenId) => {
   switch (screenId) {
-
     case "dashboard":
       renderDashboard();
       break;
@@ -81,23 +85,27 @@ onScreenChange((screenId) => {
     case "skill_tree":
       renderSkillTreeView();
       break;
-      case "timeline":
+    case "timeline":
       renderTimelineView();
       break;
-      case "reflection":
+    case "reflection":
       renderReflectionView();
       break;
-      case "settings":
+    case "settings":
       renderSettingsView();
       break;
-      case "officer":
+    case "officer":
       renderOfficerView();
+      break;
+    case "reader":                // ✅ NEW SCREEN
+      renderReaderView();
       break;
     default:
       renderDashboard();
-      console.warn("No view implemented for screen:", screenId);
   }
 });
+
+
 
 
     // 5) Initialize the router (reads URL hash, triggers first render)

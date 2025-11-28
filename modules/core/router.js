@@ -18,7 +18,8 @@ export const SCREENS = {
   REFLECTION: "reflection",
   SETTINGS: "settings",
   OFFICER: "officer",
-  WORKOUTS: "workouts"
+  WORKOUTS: "workouts",
+  READER: "reader" 
 };
 
 // List of allowed screen ids for validation

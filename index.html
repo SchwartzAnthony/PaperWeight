@@ -23,6 +23,45 @@
 
 <body>
 
+  <!-- Global Soundtrack Bar (persists across screens) -->
+  <div id="global-soundtrack-bar">
+    <div id="global-soundtrack-inner">
+      <div class="gs-left">
+        <button id="global-soundtrack-play" class="gs-btn">▶ / ⏸</button>
+        <button id="global-soundtrack-next" class="gs-btn">⏭</button>
+        <div class="gs-track-info">
+          <div class="gs-label">Soundtrack</div>
+          <div id="global-soundtrack-title">—</div>
+        </div>
+      </div>
+
+      <div class="gs-modes">
+        <button
+          class="gs-mode-chip"
+          data-global-soundtrack-mode="workout"
+        >
+          Workout
+        </button>
+        <button
+          class="gs-mode-chip"
+          data-global-soundtrack-mode="focus"
+        >
+          Focus
+        </button>
+        <button
+          class="gs-mode-chip"
+          data-global-soundtrack-mode="reading"
+        >
+          Reading
+        </button>
+      </div>
+
+      <!-- Hidden audio element, controlled by JS -->
+      <audio id="global-soundtrack-audio" preload="auto"></audio>
+    </div>
+  </div>
+
+
   <!-- App Root Container -->
   <div id="app">
     <h1>CI Progression Dashboard</h1>
@@ -32,6 +71,6 @@
   <!-- Import App Bootstrap -->
   <script type="module" src="./app.js"></script>
 
-    
 </body>
 </html>
+
