@@ -73,6 +73,341 @@ body {
   padding: 16px 16px 32px;
 }
 
+.workouts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.workouts-meta,
+.workouts-days,
+.workouts-day-detail,
+.workouts-danger {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.workout-name-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.workout-name-label input {
+  max-width: 100%;
+}
+
+.workout-day-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workout-day-tab {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-subcard);
+  font-size: 0.8rem;
+}
+
+.workout-day-tab.active {
+  border-color: var(--btn-primary-bg);
+  background: var(--btn-primary-bg);
+  color: #fff;
+}
+
+.workout-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.workout-table th,
+.workout-table td {
+  padding: 4px 6px;
+  font-size: 0.85rem;
+}
+
+.workout-table input {
+  width: 100%;
+}
+
+.workout-status.ok {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.workout-status.pending {
+  color: #ffb300;
+  font-weight: 600;
+}
+
+.workouts-danger {
+  border: 1px solid rgba(255, 80, 80, 0.7);
+}
+
+/* XP history chart */
+.xp-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.xp-history-title {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.xp-history-wrapper {
+  margin-bottom: 8px;
+}
+
+.xp-history-chart {
+  width: 100%;
+  height: 140px;
+  border-radius: 8px;
+  background: var(--bg-subcard);
+}
+
+.xp-axis {
+  stroke: var(--border-card);
+  stroke-width: 1;
+}
+
+.xp-line {
+  fill: none;
+  stroke: url(#xpLineGradient);
+  stroke-width: 2;
+}
+
+.xp-point {
+  fill: var(--progress-primary-end);
+}
+
+.xp-axis-label {
+  font-size: 0.65rem;
+  fill: var(--text-muted);
+}
+
+.xp-history-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.dash-missions-btn {
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* ============================
+   Pinnacle Goals Section
+   ============================ */
+
+.pinnacle-section {
+  margin-top: 16px;
+}
+
+.pinnacle-grid {
+  display: flex;
+  flex-direction: column;   /* stacked on very small screens */
+  gap: 12px;
+}
+
+@media (min-width: 480px) {
+  .pinnacle-grid {
+    flex-direction: row;    /* side-by-side on iPhone width+ */
+    justify-content: space-between;
+  }
+}
+
+.pinnacle-card {
+  flex: 1;
+  background: linear-gradient(
+    135deg,
+    var(--bg-card),
+    rgba(0, 140, 255, 0.25)
+  );
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pinnacle-icon {
+  font-size: 2.4rem;      /* big symbol, draws the eye */
+  margin-bottom: 8px;
+}
+
+.pinnacle-title {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.pinnacle-subtitle {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+
+
+.mission-tags {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mission-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Skill Progress strip on dashboard */
+.skill-strip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skill-strip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-strip-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-subcard);
+  font-size: 0.85rem;
+}
+
+.skill-strip-item-name {
+  font-weight: 600;
+}
+
+.skill-strip-item-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.skill-strip-item.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0, 150, 255, 0.4);
+}
+
+.skill-strip-detail {
+  margin-top: 4px;
+}
+
+.skill-strip-flow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.skill-strip-box {
+  flex: 1;
+  border-radius: 999px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-subcard);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.skill-strip-box-active {
+  background: linear-gradient(
+    90deg,
+    var(--progress-primary-start),
+    var(--progress-primary-end)
+  );
+  color: #fff;
+}
+
+.skill-strip-box-future {
+  opacity: 0.75;
+}
+
+.skill-strip-box-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.skill-strip-progress {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.skill-strip-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.skill-strip-progress-label {
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+
+.skill-strip-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.skill-strip-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+
+/* Optional: category-specific colors */
+.mission-tag-osint,
+.mission-tag-ci-skills {
+  background: rgba(0, 150, 255, 0.15);
+  border-color: rgba(0, 150, 255, 0.6);
+}
+
+.mission-tag-academic {
+  background: rgba(255, 165, 0, 0.15);
+  border-color: rgba(255, 165, 0, 0.7);
+}
+
+.mission-tag-physical,
+.mission-tag-fitness {
+  background: rgba(0, 200, 120, 0.15);
+  border-color: rgba(0, 200, 120, 0.7);
+}
+
+
 /* Generic screen container */
 .dashboard-container,
 .missions-container,
@@ -323,6 +658,31 @@ button:active {
   flex-wrap: wrap;
   gap: 4px;
 }
+
+/* Missions meta (streak + rerolls) */
+.missions-meta-section {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.missions-meta-section p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.missions-meta-section .muted {
+  color: var(--text-muted);
+}
+
+#btn-reroll-missions {
+  align-self: flex-start;
+}
+
 
 .tag-chip {
   border-radius: 999px;

@@ -10,8 +10,9 @@ import { navigateTo } from "../core/router.js";
  */
 export function renderSkillTreeView() {
   const app = document.getElementById("app");
-  const user = getUser();
+  const state = getUser();
   const skillTree = getSkillTree();
+  const user = getUser();
 
   if (!user || !skillTree) {
     app.innerHTML = "<p>Error: missing user or skill tree data.</p>";
@@ -60,6 +61,43 @@ export function renderSkillTreeView() {
   attachSkillTreeHandlers();
 }
 
+function buildSkillNodeTooltip(entry, user) {
+  const node = entry.node || entry;
+  const status = entry.status || node.status;
+  const xpByDomain = (user && user.xp_by_domain) || {};
+
+  // Detect requirement fields from the node
+  const domain =
+    node.xp_domain || node.domain || node.required_domain || null;
+
+  let required =
+    typeof node.xp_required === "number"
+      ? node.xp_required
+      : typeof node.required_xp === "number"
+      ? node.required_xp
+      : null;
+
+  const nodeName = node.label || node.name || "this skill";
+
+  // No clear XP requirement configured
+  if (!domain || required === null) {
+    if (status === "completed" || node.unlocked) {
+      return `Unlocked: ${nodeName}`;
+    }
+    return `Locked: ${nodeName} (no XP requirement info)`;
+  }
+
+  const current = xpByDomain[domain] || 0;
+  const missing = Math.max(0, required - current);
+
+  if (missing <= 0) {
+    return `Unlocked – requirement met: ${required} XP in ${domain}`;
+  }
+
+  return `Need ${missing} more XP in ${domain} to unlock: ${nodeName}`;
+}
+
+
 /**
  * Group SkillNodeView[] by tier.
  */
@@ -78,11 +116,14 @@ function groupByTier(view) {
  */
 function renderSkillNode(entry) {
   const { node, status, progress } = entry;
-
+  const user = getUser();
   const percentage = Math.round(progress * 100);
 
+  const tooltip = buildSkillNodeTooltip(entry, user);
+  const safeTooltip = String(tooltip).replace(/"/g, "&quot;");
+
   return `
-    <li class="skill-node skill-${status}">
+    <li class="skill-node skill-${status}" title="${safeTooltip}">
       <div class="skill-node-header">
         <strong>${node.name}</strong>
         <span class="skill-node-status">${status}</span>
@@ -102,6 +143,7 @@ function renderSkillNode(entry) {
     </li>
   `;
 }
+
 
 /**
  * Attach handlers (back button).

@@ -1,160 +1,89 @@
 // modules/logic/card_selector.js
-// Logic for selecting today's mission cards.
-// Pure functions only: no DOM, no storage, no global state access.
+// Selects today's missions from the card pool.
+// New version: "balanced mixer" – tries to pick
+//   1 OSINT, 1 academic, 1 physical,
+// then fills remaining slots with random cards.
+
+function includesTag(card, tag) {
+  const tags = (card.tags || []).map((t) => String(t).toLowerCase());
+  return tags.includes(tag.toLowerCase());
+}
+
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function pickOneFrom(pool, chosen) {
+  const available = pool.filter((c) => !chosen.includes(c));
+  if (!available.length) return;
+  const idx = Math.floor(Math.random() * available.length);
+  chosen.push(available[idx]);
+}
 
 /**
- * @typedef {Object} Card
- * @property {string} id
- * @property {string} title
- * @property {string} description
- * @property {string} domain
- * @property {number} estimated_time
- * @property {number} xp_reward
- * @property {string[]} linked_skill_nodes
- * @property {"easy" | "medium" | "hard"} difficulty
- */
-
-/**
- * @typedef {Object} User
- * @property {string} id
- * @property {Object.<string, number>} xp_by_domain
- * @property {Object} settings
- * @property {number} [settings.daily_card_count]
- */
-
-/**
- * Options for selection.
- * @typedef {Object} SelectionOptions
- * @property {string} [date]       // "YYYY-MM-DD" (not currently used in logic, but reserved)
- * @property {number} [count]      // override for how many cards to select
- */
-
-/**
- * Entry point:
- * Select today's missions as an array of Card.id.
- *
- * Strategy v1:
- * - Determine desired count (from options or user.settings.daily_card_count or fallback 5)
- * - Compute domain weights (weaker XP = higher weight)
- * - Randomly pick cards, weighted by domain weakness
- * - Avoid duplicates
+ * Main mission selector.
  *
  * @param {User} user
- * @param {Card[]} cards
- * @param {SelectionOptions} [options]
- * @returns {string[]} array of Card.id
+ * @param {Array<Card>} cards
+ * @param {Object} options
+ *  - dailyCount?: override number of missions
+ *
+ * @returns {string[]} card ids
  */
 export function selectDailyCardIds(user, cards, options = {}) {
-  const count =
-    options.count ??
-    (user.settings && typeof user.settings.daily_card_count === "number"
-      ? user.settings.daily_card_count
-      : 5);
+  if (!Array.isArray(cards) || !cards.length) return [];
 
-  if (!cards || cards.length === 0) {
-    return [];
-  }
+  const desiredCount =
+    options.dailyCount ??
+    (user && user.settings && user.settings.daily_card_count) ??
+    3;
 
-  const domainWeights = computeDomainWeights(user, cards);
+  const dailyCount = Math.max(1, Number(desiredCount) || 3);
 
-  const selectedIds = [];
-  const usedCardIds = new Set();
+  // Basic pool – you can add additional filters here later
+  const pool = cards.filter((c) => !c.disabled);
 
-  let safetyCounter = 0;
-  const maxIterations = cards.length * 5; // avoid infinite loops
+  if (!pool.length) return [];
 
-  while (selectedIds.length < count && safetyCounter < maxIterations) {
-    safetyCounter++;
+  // ---- BALANCED BUCKETS ----
+  // We assume:
+  //   - OSINT missions: tag "osint"
+  //   - Academic missions: domain === "academic"
+  //   - Physical missions: domain === "physical"
 
-    const card = pickRandomCardWeightedByDomain(cards, domainWeights);
-    if (!card) break;
+  const osintCards = pool.filter((c) => includesTag(c, "osint"));
+  const academicCards = pool.filter((c) => c.domain === "academic");
+  const physicalCards = pool.filter((c) => c.domain === "physical");
 
-    if (usedCardIds.has(card.id)) continue;
+  const chosen = [];
 
-    selectedIds.push(card.id);
-    usedCardIds.add(card.id);
-  }
+  // 1) Try to get 1 OSINT
+  pickOneFrom(osintCards, chosen);
 
-  return selectedIds;
-}
+  // 2) 1 academic
+  pickOneFrom(academicCards, chosen);
 
-// ================================
-// Helper: compute domain weights
-// ================================
+  // 3) 1 physical
+  pickOneFrom(physicalCards, chosen);
 
-/**
- * Compute a weight for each domain based on user's XP.
- * Lower XP -> higher weight -> more likely to be selected.
- *
- * @param {User} user
- * @param {Card[]} cards
- * @returns {Object.<string, number>} key: domain, value: weight
- */
-function computeDomainWeights(user, cards) {
-  const xp = user.xp_by_domain || {};
+  // 4) Fill remaining slots from everything else,
+  //    excluding what we already picked.
+  const remainingSlots = Math.max(0, dailyCount - chosen.length);
+  if (remainingSlots > 0) {
+    const remainingPool = shuffle(
+      pool.filter((c) => !chosen.includes(c))
+    );
 
-  // Collect domains present in the cards list
-  const domainsInCards = new Set(cards.map((c) => c.domain));
-
-  // Determine raw values: we use (maxXP - currentXP + base) to invert priority
-  let maxXp = 0;
-  for (const domain of domainsInCards) {
-    const value = xp[domain] ?? 0;
-    if (value > maxXp) maxXp = value;
-  }
-
-  const base = 10; // prevents zero weights
-  const weights = {};
-
-  for (const domain of domainsInCards) {
-    const domainXp = xp[domain] ?? 0;
-    const raw = maxXp - domainXp + base;
-    weights[domain] = raw > 0 ? raw : base;
-  }
-
-  return weights;
-}
-
-// ======================================
-// Helper: weighted random card selection
-// ======================================
-
-/**
- * Pick one random card, weighted by domain weakness.
- *
- * @param {Card[]} cards
- * @param {Object.<string, number>} domainWeights
- * @returns {Card | null}
- */
-function pickRandomCardWeightedByDomain(cards, domainWeights) {
-  if (!cards.length) return null;
-
-  // Compute total weight across all cards
-  let totalWeight = 0;
-  const cardWeights = [];
-
-  for (const card of cards) {
-    const domainWeight = domainWeights[card.domain] ?? 1;
-    const weight = domainWeight;
-    cardWeights.push({ card, weight });
-    totalWeight += weight;
-  }
-
-  if (totalWeight <= 0) {
-    // fallback: uniform random
-    const idx = Math.floor(Math.random() * cards.length);
-    return cards[idx];
-  }
-
-  let r = Math.random() * totalWeight;
-
-  for (const entry of cardWeights) {
-    if (r < entry.weight) {
-      return entry.card;
+    for (let i = 0; i < remainingSlots && i < remainingPool.length; i++) {
+      chosen.push(remainingPool[i]);
     }
-    r -= entry.weight;
   }
 
-  // fallback
-  return cardWeights[cardWeights.length - 1].card;
+  // Return ids only
+  return chosen.map((c) => c.id);
 }

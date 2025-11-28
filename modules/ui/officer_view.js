@@ -1,9 +1,17 @@
+// NOW CALLED STATS IN APP
 // modules/ui/officer_view.js
-// Renders the Officer Persona character sheet.
+// Renders the Stats screen (domain XP breakdown).
 
 import { getUser } from "../core/state.js";
 import { computeOfficerStats } from "../logic/officer_engine.js";
 import { navigateTo } from "../core/router.js";
+import {
+  computeStreakStats,
+  computeXpMultiplier,
+  computeStreakBadges,
+  computeBonusRolls,
+} from "../logic/streaks_engine.js";
+
 
 export function renderOfficerView() {
   const app = document.getElementById("app");
@@ -12,9 +20,11 @@ export function renderOfficerView() {
   if (!user) {
     app.innerHTML = `
       <div class="officer-container">
-        <h1>Officer Persona</h1>
+        <h1>Stats</h1>
         <p>Error: no user loaded.</p>
-        <button id="btn-officer-back">Back to Dashboard</button>
+        <section class="officer-section officer-footer">
+          <button id="btn-officer-back">Back to Dashboard</button>
+        </section>
       </div>
     `;
     attachOfficerHandlers();
@@ -23,46 +33,55 @@ export function renderOfficerView() {
 
   const stats = computeOfficerStats(user);
 
-  app.innerHTML = `
+    const streak = computeStreakStats(user);
+  const { multiplier, label: multiplierLabel } = computeXpMultiplier(
+    streak.currentStreak
+  );
+  const badges = computeStreakBadges(streak);
+  const bonusRolls = computeBonusRolls(streak.currentStreak);
+
+
+   app.innerHTML = `
     <div class="officer-container">
-      <h1>Officer Persona</h1>
+      <h1>Stats</h1>
 
-      <!-- Header: Level + Rank -->
-      <section class="officer-section officer-header">
-        <div class="officer-level-circle">
-          <div class="officer-level-inner">
-            <span class="officer-level-label">LVL</span>
-            <span class="officer-level-value">${stats.level}</span>
-          </div>
-          <div class="officer-level-ring" style="--progress:${(
-            stats.progress * 100
-          ).toFixed(0)}%;"></div>
-        </div>
-
-        <div class="officer-header-text">
-          <h2>${stats.rankName}</h2>
-          <p>Total XP: <strong>${stats.totalXp}</strong></p>
-          ${
-            stats.primaryDomain
-              ? `<p>Primary specialization: <strong>${stats.primaryDomain}</strong></p>`
-              : `<p>No XP yet. Complete missions to define your specialization.</p>`
-          }
-        </div>
-      </section>
-
-      <!-- Level progress bar -->
+      <!-- Streak & Rewards -->
       <section class="officer-section">
-        <h2>Level Progress</h2>
-        <div class="officer-level-progress">
-          <div class="officer-level-progress-bar">
-            <div class="officer-level-progress-fill" style="width:${(
-              stats.progress * 100
-            ).toFixed(0)}%;"></div>
-          </div>
-          <div class="officer-level-progress-label">
-            ${stats.xpIntoLevel} / ${stats.xpForLevel} XP for next level
-          </div>
-        </div>
+        <h2>Streak & Rewards</h2>
+        <p>
+          Current streak:
+          <strong>${streak.currentStreak} day${
+            streak.currentStreak === 1 ? "" : "s"
+          }</strong>
+          • Best:
+          <strong>${streak.longestStreak} days</strong>
+        </p>
+        <p>
+          XP multiplier:
+          <strong>${multiplier.toFixed(2)}×</strong>
+          <span class="streak-label">(${multiplierLabel})</span>
+        </p>
+        <p>
+          Bonus mission rerolls today:
+          <strong>${bonusRolls}</strong>
+        </p>
+
+        ${
+          badges && badges.length
+            ? `
+          <div class="streak-badges">
+            ${badges
+              .map(
+                (b) => `
+              <span class="streak-badge">
+                ${b.label}
+              </span>
+            `
+              )
+              .join("")}
+          </div>`
+            : ""
+        }
       </section>
 
       <!-- Domain breakdown -->
@@ -93,11 +112,12 @@ export function renderOfficerView() {
         }
       </section>
 
-      <div class="officer-footer">
+      <section class="officer-section officer-footer">
         <button id="btn-officer-back">Back to Dashboard</button>
-      </div>
+      </section>
     </div>
   `;
+
 
   attachOfficerHandlers();
 }

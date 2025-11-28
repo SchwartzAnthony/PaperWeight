@@ -26,6 +26,7 @@ import { renderSettingsView } from "./modules/ui/settings_view.js";
 import { renderReflectionView } from "./modules/ui/reflection_view.js";
 import { initTheme } from "./modules/ui/theme.js";
 import { renderOfficerView } from "./modules/ui/officer_view.js";
+import { renderWorkoutsView } from "./modules/ui/workouts_view.js";
 
 
 
@@ -70,6 +71,9 @@ onScreenChange((screenId) => {
 
     case "dashboard":
       renderDashboard();
+      break;
+    case "workouts":
+      renderWorkoutsView();
       break;
     case "missions":
       renderMissionsView();

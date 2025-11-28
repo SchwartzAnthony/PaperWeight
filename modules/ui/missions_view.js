@@ -8,6 +8,8 @@ import {
   setUser,
   getSkillTree,
   getCardById,
+  getCards,
+  setTodaysMissions,
 } from "../core/state.js";
 import { saveUser } from "../core/storage.js";
 import { applyXpForCompletedCard } from "../logic/xp_engine.js";
@@ -16,6 +18,12 @@ import {
   extractTagsFromCards,
   cardMatchesFilter,
 } from "../logic/tags_engine.js";
+import { selectDailyCardIds } from "../logic/card_selector.js";
+import {
+  computeStreakStats,
+  computeBonusRolls,
+} from "../logic/streaks_engine.js";
+
 
 /**
  * Render the Missions view.
@@ -34,6 +42,13 @@ export function renderMissionsView(activeFilter = "all") {
       user.completed_cards_by_date[today]) ||
     [];
 
+  // Streak-based rerolls
+  const streakStats = computeStreakStats(user);
+  const allowedRolls = computeBonusRolls(streakStats.currentStreak);
+  const usedRolls =
+    (user.rerolls_by_date && user.rerolls_by_date[today]) || 0;
+  const remainingRolls = Math.max(0, allowedRolls - usedRolls);
+
   // Resolve mission IDs → card objects
   const missionCards = missions
     .map((id) => cards.find((c) => c.id === id) || getCardById(id))
@@ -51,6 +66,19 @@ export function renderMissionsView(activeFilter = "all") {
   app.innerHTML = `
     <div class="missions-container">
       <h1>Missions</h1>
+
+      <!-- Reroll info -->
+  <section class="missions-meta-section">
+    <p>
+      Bonus rolls today:
+      <strong>${remainingRolls}</strong> / ${allowedRolls}
+    </p>
+    ${
+      remainingRolls > 0
+        ? `<button id="btn-reroll-missions">Reroll Missions</button>`
+        : `<p class="muted">No rerolls left today. Build your streak to earn more.</p>`
+    }
+        </section>
 
       <!-- Filters -->
       <section class="missions-filters-section">
@@ -145,6 +173,14 @@ export function renderMissionsView(activeFilter = "all") {
  * Attach event listeners for mission completion, filters, and navigation.
  */
 function attachMissionHandlers(activeFilter) {
+  // Reroll missions button
+  const btnReroll = document.getElementById("btn-reroll-missions");
+  if (btnReroll) {
+    btnReroll.addEventListener("click", () => {
+      handleRerollMissions(activeFilter);
+    });
+  }
+
   // Complete mission buttons
   document.querySelectorAll(".mission-complete-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -171,6 +207,45 @@ function attachMissionHandlers(activeFilter) {
       navigateTo("dashboard");
     });
   }
+}
+
+function handleRerollMissions(activeFilter) {
+  const user = getUser();
+  const cards = getCards();
+  if (!user || !cards || cards.length === 0) return;
+
+  const today = getTodayIsoDate();
+
+  // Re-check streak + allowances
+  const streakStats = computeStreakStats(user);
+  const allowed = computeBonusRolls(streakStats.currentStreak);
+  const used =
+    (user.rerolls_by_date && user.rerolls_by_date[today]) || 0;
+  const remaining = Math.max(0, allowed - used);
+
+  if (remaining <= 0) {
+    alert("No bonus rolls left today.");
+    return;
+  }
+
+  // Generate a fresh set of missions for today
+  const newMissionIds = selectDailyCardIds(user, cards, {});
+
+  // Update state.todaysMissions
+  setTodaysMissions(newMissionIds);
+
+  // Update user's reroll count
+  const updatedUser = { ...user };
+  if (!updatedUser.rerolls_by_date) {
+    updatedUser.rerolls_by_date = {};
+  }
+  updatedUser.rerolls_by_date[today] = used + 1;
+
+  setUser(updatedUser);
+  saveUser(updatedUser);
+
+  // Re-render Missions view with same filter
+  renderMissionsView(activeFilter);
 }
 
 /**

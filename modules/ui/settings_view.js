@@ -11,6 +11,8 @@ import { saveUser, resetUser } from "../core/storage.js";
 import { selectDailyCardIds } from "../logic/card_selector.js";
 import { navigateTo } from "../core/router.js";
 import { applyTheme } from "./theme.js";
+import { loadArchives, saveArchives } from "../core/storage.js";
+
 
 /**
  * Render the Settings view.
@@ -73,6 +75,14 @@ app.innerHTML = `
       </p>
       <button id="btn-reset-profile">Reset Profile</button>
     </section>
+
+    <section class="settings-section">
+  <h2>Data & Archive</h2>
+  <p>You can create local archive snapshots and export your current profile as CSV for long-term backup.</p>
+  <button id="btn-create-archive">Create Archive Snapshot</button>
+  <button id="btn-export-csv">Download CSV (current profile)</button>
+</section>
+
 
     <div class="settings-footer">
       <button id="btn-settings-back">Back to Dashboard</button>

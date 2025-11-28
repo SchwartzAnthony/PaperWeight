@@ -10,10 +10,14 @@
     "ci_skills": 0,
     "admin": 0
   },
+  "rerolls_by_date": {},
   "completed_skill_nodes": [],
   "completed_cards_by_date": {},
+    "workout_routine": null,
+  "workout_completion_by_date": {},
   "settings": {
     "daily_card_count": 5,
+    "xp_view_mode": "days", 
     "language": "en"
   }
 }
